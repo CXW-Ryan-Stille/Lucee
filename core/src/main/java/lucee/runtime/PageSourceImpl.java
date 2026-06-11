@@ -349,7 +349,10 @@ public final class PageSourceImpl implements PageSource {
 							done = true;
 						}
 						catch (ClassNotFoundException cnfe) {
-							LogUtil.log(config, "compile", cnfe);
+							// expected, fully-recovered cache miss: pcn may hold a class id from a PhysicalClassLoader
+							// generation that has since been swapped out. The code retries and recompiles on the same
+							// path, so this is not an error -- log at DEBUG (see LDEV-6385 for the same treatment).
+							LogUtil.log(config, "compile", cnfe, Log.LEVEL_DEBUG, "application");
 						}
 					}
 					// when classFile is at least as fresh as source, try loading by name first;
@@ -362,7 +365,10 @@ public final class PageSourceImpl implements PageSource {
 							done = true;
 						}
 						catch (ClassNotFoundException cnfe) {
-							LogUtil.log(config, "compile", cnfe);
+							// expected, fully-recovered cache miss: pcn may hold a class id from a PhysicalClassLoader
+							// generation that has since been swapped out. The code retries and recompiles on the same
+							// path, so this is not an error -- log at DEBUG (see LDEV-6385 for the same treatment).
+							LogUtil.log(config, "compile", cnfe, Log.LEVEL_DEBUG, "application");
 						}
 					}
 					if (!done) {
